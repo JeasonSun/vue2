@@ -1,0 +1,26 @@
+{
+  "name": "vue2",
+  "version": "1.0.0",
+  "description": "Vue2 核心源码解析 [珠峰培训](http://zhufengpeixun.com/jiagou/vue-analyse/one.html)",
+  "main": "index.js",
+  "scripts": {
+    "start": "rollup -c -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeasonSun/vue2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JeasonSun/vue2/issues"
+  },
+  "homepage": "https://github.com/JeasonSun/vue2#readme",
+  "devDependencies": {
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "rollup": "^2.21.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-serve": "^1.0.1"
+  }
+}
