@@ -8,12 +8,16 @@ const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g;
 
 
 export function parseHTML(html) {
+    let root; // 树根
+    let currentParent;
+    let stack = []; // 用来判断标签是否正常闭合
+
     // 根据html解析成树结构
     while (html) {
         let textEnd = html.indexOf('<');
         if (textEnd == 0) {
             const startTagMatch = parseStartTag();
-            if(startTagMatch){
+            if (startTagMatch) {
                 start(startTagMatch.tagName, startTagMatch.attrs);
             }
             const endTagMatch = html.match(endTag);
@@ -35,14 +39,50 @@ export function parseHTML(html) {
         // break;
     }
 
-    function start(tagName, attrs) {
-        console.log(tagName, attrs);
+    function start(tagName, attrs) { // 开始标签，每次解析开始标签，都会执行此方法。
+        // console.log(tagName, attrs);
+        let element = createASTElement(tagName, attrs);
+        if (!root) {
+            root = element;
+        }
+        currentParent = element;
+        stack.push(element);
     }
-    function end(tagName) {
-        console.log(tagName);
+    function end(tagName) {// 确立父子关系；
+        // console.log(tagName);
+        let element = stack.pop();
+        let parent = stack[stack.length - 1];
+        if (element.tag !== tagName) {
+            throw new Error(`${tagName} tag is not closed`)
+        }
+        if (parent) {
+            element.parent = parent;
+            parent.children.push(element);
+            currentParent = parent;
+        }
+        // console.log(element);
+
     }
     function chars(text) {
-        console.log(text);
+        // console.log(text);
+        // text = text.replace(/\s/g, '');
+        text = text.trim();
+        if (text) {
+            currentParent.children.push({
+                type: 3,
+                text
+            })
+        }
+
+    }
+    function createASTElement(tagName, attrs) {
+        return {
+            tag: tagName,
+            attrs,
+            children: [],
+            parent: null,
+            type: 1, // 1.普通元素   3.文本
+        }
     }
 
     function advance(n) {
@@ -73,6 +113,5 @@ export function parseHTML(html) {
         }
     }
 
-
-
+    return root;
 }
