@@ -1,9 +1,28 @@
 import { isObject } from '../utils';
-
+import { arrayMethods } from './array';
 class Observer {
     constructor(data) {
+        // data.__ob__ = this; // 可枚举，walk中会无限循环
+        Object.defineProperty(data, '__ob__', {
+            enumerable: false,
+            configurable: false,
+            value: this
+        })
         // console.log(data);
-        this.walk(data);
+        // 对数组索引进行拦截，性能差，而且直接更改索引的方式并不多。
+        if (Array.isArray(data)) {
+            // vue如何对数组进行处理呢？ 数组用的是重写数组的方法。 函数劫持。
+            data.__proto__ = arrayMethods;
+            this.observeArray(data);
+        } else {
+            this.walk(data);
+        }
+
+    }
+    observeArray(data) {
+        for (let i = 0; i < data.length; i++) {
+            observe(data[i]);
+        }
     }
     walk(data) {
         // 对象的循环
