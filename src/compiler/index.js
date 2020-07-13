@@ -14,7 +14,9 @@ export function compileToFunctions(template) {
 
     //3. 代码生成:核心就是字符串拼接；
     let code = generate(ast);
-    console.log(code);
-
-
+    code = `with(this){return ${code}}`;
+    let render = new Function(code); // 相当于给字符串变成了函数。
+    // console.log(render);
+    // TODO: 注释节点   自闭和标签  事件绑定  @click  class   slot插槽
+    return render;
 }
