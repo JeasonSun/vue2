@@ -1,5 +1,5 @@
 import Watcher from './observe/watcher';
-
+import {patch} from './vdom/patch';
 export function mountComponent(vm, el) {
     // console.log(vm, el);
     // Vue在渲染的过程中，会创建一个所谓的渲染watcher， 只用来渲染
@@ -19,7 +19,10 @@ export function mountComponent(vm, el) {
 
 export function lifeCycleMixin(Vue) {
     Vue.prototype._update = function (vnode) {
-        console.log(vnode, '_update');
-
+        // console.log(vnode, '_update');
+        const vm = this;
+        // 将虚拟节点变成真实节点，替换掉$el;
+        // 后续 dom diff 也会执行此方法；
+        vm.$el = patch(vm.$el, vnode);
     }
 }

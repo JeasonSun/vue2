@@ -23,7 +23,8 @@ new Watcher(vm, updateComponent, () => { }, true);
 
 * Watcher
 * updateComponent
-* vm._render
-* vm._update
-
-2.27
+* vm._render 创建虚拟节点
+* vm._update 创建真实节点
+* mixin
+  * 生命周期合并策略 3.43
+* 依赖收集

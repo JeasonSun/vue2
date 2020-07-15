@@ -1,7 +1,7 @@
 import { createTextVNode, createElement } from './vdom/create-element';
 export function renderMixin(Vue) {
     Vue.prototype._render = function () {
-        console.log('_render');
+        // console.log('_render');
         // 调用options.render方法；
         const vm = this;
         const { render } = vm.$options;

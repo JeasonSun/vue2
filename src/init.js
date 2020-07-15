@@ -19,10 +19,10 @@ export function initMixin(Vue) {
     }
 
     Vue.prototype.$mount = function (el) {
-        // 可能是字符串，也可能是一个dom对象。
-        el = document.querySelector(el);
-        // 如果同时传入template和render，默认会使用render，抛弃template,如果都没有传，就使用id='app'中的模板；
         const vm = this;
+        // 可能是字符串，也可能是一个dom对象。
+        el = vm.$el = document.querySelector(el);
+        // 如果同时传入template和render，默认会使用render，抛弃template,如果都没有传，就使用id='app'中的模板；
         const opts = vm.$options;
 
         if (!opts.render) {

@@ -51,14 +51,13 @@ export function parseHTML(html) {
     function end(tagName) {// 确立父子关系；
         // console.log(tagName);
         let element = stack.pop();
-        let parent = stack[stack.length - 1];
+        currentParent = stack[stack.length - 1];
         if (element.tag !== tagName) {
             throw new Error(`${tagName} tag is not closed`)
         }
-        if (parent) {
-            element.parent = parent;
-            parent.children.push(element);
-            currentParent = parent;
+        if (currentParent) {
+            element.parent = currentParent;
+            currentParent.children.push(element);
         }
         // console.log(element);
 

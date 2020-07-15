@@ -1,6 +1,6 @@
 
 export function createTextVNode(text) {
-    console.log(text);
+    // console.log(text);
     return vnode(undefined, undefined, undefined, undefined, text);
 }
 
