@@ -28,3 +28,4 @@ new Watcher(vm, updateComponent, () => { }, true);
 * mixin
   * 生命周期合并策略 3.43
 * 依赖收集
+* todo
