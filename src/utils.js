@@ -5,9 +5,12 @@ export function isObject(obj) {
 const LIFECYCLE_HOOKS = [
     'beforeCreate',
     'created',
+    'beforeMount',
     'mounted',
     'beforeUpdate',
-    'updated'
+    'updated',
+    'beforeDestroy',
+    'destroyed',
 ]
 let strategy = {};
 function mergeHook(parentVal, childVal) {
@@ -27,7 +30,12 @@ LIFECYCLE_HOOKS.forEach(hook => {
 });
 
 strategy.data = function (parent, child) {
-
+    let parentData = typeof parent === 'function' ? parent() : parent ? parent : {};
+    let childData = typeof child === 'function' ? child() : child ? child : {};
+    return {
+        ...parentData,
+        ...childData
+    }
 }
 
 strategy.computed = function (parent, child) {
@@ -49,13 +57,15 @@ export function mergeOptions(parent, child) {
         // 策略模式，根据不同的属性，调用不同的策略
         if (strategy[key]) {
             options[key] = strategy[key](parent[key], child[key]);
-        } else if (isObject(parent[key]) && isObject(child[key])) {
-            options[key] = {
-                ...parent[key],
-                ...child[key]
-            }
         } else {
-            options[key] = child[key] || parent[key];
+            if (isObject(parent[key]) && isObject(child[key])) {
+                options[key] = {
+                    ...parent[key],
+                    ...child[key]
+                }
+            } else {
+                options[key] = child[key] || parent[key];
+            }
         }
     }
     return options;

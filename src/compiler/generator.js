@@ -51,7 +51,7 @@ function gen(node) {
         // => _v('hello world' + _s(msg) + 'aa' + _s(bb))
         if (!defaultTagRE.test(text)) {
             return `_v(${JSON.stringify(text)})`;
-        } else {
+        } else { 
             let tokens = []; // /g 每次正则使用过后，都需要重新制定 lastIndex
             let lastIndex = defaultTagRE.lastIndex = 0;
             let match, index;

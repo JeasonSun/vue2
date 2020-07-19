@@ -11,9 +11,10 @@
     <div id="app">
         <div class="a" name="mojie" style='color:red'>
             <p><span>1 23</span></p>
-            <p>hello world {{msg}}{{info.name}}</p>
         </div>
+        <p>hello world {{msg}} === {{msg}} | {{info.name}}</p>
     </div>
+   
     <script src="../dist/vue.js"></script>
     <!-- vue2中 模板编译可以选择性的添加   runtimeOnly 只在运行时候使用（无法解析用户传递的template属性）   runtime with compiler（可以实现模板编译的） -->
     <script>
@@ -70,7 +71,15 @@
             }
         });
         console.log(vm);
-        vm._data.arr.push({ a: 2 })
+        // vm._data.arr.push({ a: 2 });
+
+        //依赖收集，每个属性都会对应一个自己重新渲染的方法watcher
+        // Vue中实现了响应式系统，就是如果属性变化了，视图会自动更新
+        setTimeout(() => {
+            // 给每个属性增加一个dep属性，这个属性里可以包含多个watcher。
+
+            vm.msg = 'mojie'
+        }, 2000)
 
     </script>
 </body>

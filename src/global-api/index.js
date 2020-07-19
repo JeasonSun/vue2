@@ -8,7 +8,6 @@ export function initGlobalApi(Vue) {
     // 提取公共的方法、逻辑，通过此方法混合到每个实例中。
     Vue.mixin = function (mixin) {
         this.options = mergeOptions(this.options, mixin);
-        console.log(this.options);
     }
 }
 
