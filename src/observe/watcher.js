@@ -1,4 +1,6 @@
 import { pushTarget, popTarget } from './dep';
+import { queueWatcher} from './scheduler';
+
 let id = 0; // 做一个watcher的id，每次创建watcher时候，都有一个序号。
 class Watcher {
     constructor(vm, exprOrFn, cb, options) {
@@ -33,7 +35,12 @@ class Watcher {
         }
     }
 
-    update(){
+    update() {
+        // this.get(); // 以前调用get方法，直接更新视图。
+        queueWatcher(this); // 将watcher存储起来。
+    }
+
+    run() {
         this.get();
     }
 

@@ -78,7 +78,11 @@
         setTimeout(() => {
             // 给每个属性增加一个dep属性，这个属性里可以包含多个watcher。
 
-            vm.msg = 'mojie'
+            vm.msg = 'mojie';
+            vm.info.name = 'jeason';
+            vm.$nextTick(() => {
+                console.log(app.innerHTML);
+            })
         }, 2000)
 
     </script>

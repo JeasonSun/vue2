@@ -40,3 +40,4 @@ new Watcher(vm, updateComponent, () => { }, true);
 * todo 数组的依赖收集
 * 通过页面更新
 * 异步更新策略
+* nextTick

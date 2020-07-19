@@ -10,6 +10,7 @@ export function mountComponent(vm, el) {
         // 内部会调用刚才我们解析后的render方法 => vNode
         // vm._render() => 调用options.render 方法， 得到VNode虚拟节点
         // vm._update() => 将虚拟dom变成真实dom来执行。
+        console.log('update')
         vm._update(vm._render());
     }
 
