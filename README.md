@@ -41,3 +41,6 @@ new Watcher(vm, updateComponent, () => { }, true);
 * 通过页面更新
 * 异步更新策略
 * nextTick
+
+
+standard
