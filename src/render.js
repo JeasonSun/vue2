@@ -5,21 +5,21 @@ export function renderMixin (Vue) {
     // 调用options.render方法；
     const vm = this
     const { render } = vm.$options
-    Vue.prototype._v = function (text) {
-      // 创建文件的虚拟节点
-      return createTextVNode(text)
-    }
-    Vue.prototype._c = function () {
-      return createElement(...arguments)
-    }
-    Vue.prototype._s = function (val) {
-      return val == null
-        ? ''
-        : typeof val === 'object'
-          ? JSON.stringify(val)
-          : val
-    }
     const vnode = render.call(vm)
     return vnode
+  }
+  Vue.prototype._v = function (text) {
+    // 创建文件的虚拟节点
+    return createTextVNode(text)
+  }
+  Vue.prototype._c = function () {
+    return createElement(...arguments)
+  }
+  Vue.prototype._s = function (val) {
+    return val == null
+      ? ''
+      : typeof val === 'object'
+        ? JSON.stringify(val)
+        : val
   }
 }

@@ -41,6 +41,7 @@ new Watcher(vm, updateComponent, () => { }, true);
 * 通过页面更新
 * 异步更新策略
 * nextTick
-
-
-standard
+* diff算法
+  * 根比较 属性更新
+  * 儿子比较的策略
+    * 情况一：v-for从头部开始比较 1.30
