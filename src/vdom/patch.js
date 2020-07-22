@@ -65,25 +65,79 @@ function updateChildren (parent, oldChildren, newChildren) {
   let newStartVnode = newChildren[0] // 新的开始
   let newEndIndex = newChildren.length - 1 // 新的尾部索引
   let newEndVnode = newChildren[newEndIndex] // 新的最后一个
+
+  function makeIndexByKey (children) {
+    const map = {}
+    children.forEach((item, index) => {
+      map[item.key] = index
+    })
+    return map
+  }
+  // 只需要创建一次映射表
+  const map = makeIndexByKey(oldChildren) // 根据老的孩子的key，创建一个映射表
   // 1方案， 先开始从头部进行比较 O(n)
   while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
     // 如何判断，两个虚拟节点是否一致，就是用key + type进行判断
-    if (isSameVnode(oldStartVnode, newStartVnode)) {
+    if (!oldStartVnode) {
+      oldStartVnode = oldChildren[++oldStartIndex]
+    } else if (!oldEndVnode) {
+      oldEndVnode = oldChildren[--oldEndIndex]
+    } else if (isSameVnode(oldStartVnode, newStartVnode)) {
       // 标签和key一致，但是元素可能属性不一致
       patch(oldStartVnode, newStartVnode) // 自身属性+递归比较
       oldStartVnode = oldChildren[++oldStartIndex]
+      newStartVnode = newChildren[++newStartIndex]
+    } else if (isSameVnode(oldEndVnode, newEndVnode)) {
+      // 2方案，从尾部开始比较，，如果头部不一致，开始尾部比较，优化向前插入。
+      patch(oldEndVnode, newEndVnode)
+      oldEndVnode = oldChildren[--oldEndIndex] // 移动尾部指针
+      newEndVnode = newChildren[--newEndIndex]
+    } else if (isSameVnode(oldStartVnode, newEndVnode)) {
+      // 3方案， 头不一样，尾也不一样 头部移动到了尾部 倒序操作
+      patch(oldStartVnode, newEndVnode)
+      parent.insertBefore(oldStartVnode.el, oldEndVnode.el.nextSibling)
+      oldStartVnode = oldChildren[++oldStartIndex]
+      newEndVnode = newChildren[--newEndIndex]
+    } else if (isSameVnode(oldEndVnode, newStartVnode)) {
+      patch(oldEndVnode, newStartVnode)
+      parent.insertBefore(oldEndVnode.el, oldStartVnode.el)
+      oldEndVnode = oldChildren[--oldEndIndex]
+      newStartVnode = newChildren[++newStartIndex]
+    } else {
+      // 乱序比对
+      // const map = makeIndexByKey(oldChildren) // 根据老的孩子的key，创建一个映射表
+      const moveIndex = map[newStartVnode.key]
+      if (moveIndex === undefined) {
+        // 是一个新元素，应该添加进去
+        parent.insertBefore(createElm(newStartVnode), oldStartVnode.el)
+      } else {
+        const moveVnode = oldChildren[moveIndex]
+        oldChildren[moveIndex] = null
+        patch(moveVnode, newStartVnode)
+        parent.insertBefore(moveVnode.el, oldStartVnode.el)
+      }
       newStartVnode = newChildren[++newStartIndex]
     }
   }
 
   if (newStartIndex <= newEndIndex) {
     for (let i = newStartIndex; i <= newEndIndex; i++) {
-      parent.appendChild(createElm(newChildren[i]))
+      // parent.appendChild(createElm(newChildren[i]))
+      const ele =
+        newChildren[newEndIndex + 1] == null
+          ? null
+          : newChildren[newEndIndex + 1].el
+      parent.insertBefore(createElm(newChildren[i]), ele)
     }
   }
+
   if (oldStartIndex <= oldEndIndex) {
+    // 说明新的已经循环完毕了，老的有剩余，剩余的就是不要的
     for (let i = oldStartIndex; i <= oldEndIndex; i++) {
-      parent.removeChild(oldChildren[i].el)
+      const child = oldChildren[i]
+      if (child != null) {
+        parent.removeChild(child.el)
+      }
     }
   }
 }

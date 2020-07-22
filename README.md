@@ -44,4 +44,4 @@ new Watcher(vm, updateComponent, () => { }, true);
 * diff算法
   * 根比较 属性更新
   * 儿子比较的策略
-    * 情况一：v-for从头部开始比较 1.30
+    * 情况一：v-for从头部开始比较
