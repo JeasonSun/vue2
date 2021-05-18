@@ -21,6 +21,6 @@
     "@babel/preset-env": "^7.10.4",
     "rollup": "^2.21.0",
     "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-serve": "^1.0.1"
+    "rollup-plugin-serve": "^1.0.2"
   }
 }
